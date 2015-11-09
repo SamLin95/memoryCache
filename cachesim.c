@@ -32,7 +32,7 @@ void cache_init(uint64_t C, uint64_t S, uint64_t B) {
 
 	for (i = 0; i < num_lines;i++) {
 		current_line = &(my_cache->lines[i]);
-		current_line -> blocks = (cache_block*)calloc(num_blocks_set, sizeof(cache_block));  
+		current_line -> blocks = (cache_block*)calloc(num_blocks_set, sizeof(cache_block));
 	}
 }
 
@@ -48,25 +48,23 @@ void cache_access (char rw, uint64_t address, struct cache_stats_t *stats) {
 	cache_line *current_line;
 	cache_block *current_block; 
 	cache_block *hit_block;
-
+	stats -> accesses++;
 	my_cache->timer++;
 	tag = get_tag(address);
 	line_number = get_line_number(address);
 	offset = get_offset(address);
 
 	current_line = &(my_cache->lines[line_number]);
-
+	hit = 0;
 	for (i = 0; i < my_cache -> num_blocks_set;i++) {
 		current_block = &(current_line->blocks[i]);
 		if (current_block->valid && current_block->tag == tag) {
 			hit = 1;
 			hit_block = current_block;
+			hit_block->time_stamp = my_cache ->timer;
 		}
 
 	}
-
-	
-
 	if (rw == READ){
 		stats->reads++;
 	} else if (rw == WRITE) {
@@ -76,16 +74,16 @@ void cache_access (char rw, uint64_t address, struct cache_stats_t *stats) {
 	if (hit && rw == WRITE){
 		hit_block -> dirty = 1;
 	} else if (!hit) {
-		handle_miss(current_line, tag, address, rw, stats);//get a victim from current line and replace it with the memory from the address.
+		handle_miss(current_line, tag, rw, stats);//get a victim from current line and replace it with the memory from the address.
 	}
 }
 
-void handle_miss(cache_line *current_line, uint64_t tag, uint64_t address, char rw, struct cache_stats_t *stats) {
-	int has_empty = 0;
+void handle_miss(cache_line *current_line, uint64_t tag, char rw, struct cache_stats_t *stats) {
 	cache_block *ava_block = NULL;
 	int i;
+	stats -> misses++;
 	for (i = 0; i < my_cache -> num_blocks_set;i++) {
-		if (!current_line -> blocks[i].valid) {
+		if (!(current_line -> blocks[i].valid)) {
 			ava_block = &(current_line -> blocks[i]);
 		}
 	}
@@ -133,7 +131,7 @@ void cache_cleanup (struct cache_stats_t *stats) {
 	for (i = 0; i < my_cache -> num_lines; i++) {
 		free(my_cache -> lines[i].blocks);
 	}
-	free(my_cache -> lines);
+	free(my_cache->lines);
 	free(my_cache);
 	stats->miss_rate = stats->misses /(1.0*stats->accesses);
 	stats->avg_access_time = 2 + stats->miss_rate * 100; 

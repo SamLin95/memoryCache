@@ -62,7 +62,7 @@ void cache_cleanup (struct cache_stats_t *stats);
 uint64_t get_tag(uint64_t address);
 uint64_t get_line_number(uint64_t address);
 uint64_t get_offset(uint64_t get_offset);
-void handle_miss(cache_line *current_line, uint64_t tag, uint64_t address, char rw, struct cache_stats_t *stats);
+void handle_miss(cache_line *current_line, uint64_t tag, char rw, struct cache_stats_t *stats);
 cache_block* get_victim(cache_line *current_line, uint64_t tag, char rw, struct cache_stats_t *stats);
 
 static const uint64_t DEFAULT_C = 15;   /* 32KB Cache */
