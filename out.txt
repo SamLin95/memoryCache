@@ -1,0 +1,42 @@
+Default Configuration
+
+--astar.trace--
+
+--bzip2.trace--
+
+--mcf.trace--
+
+--perlbench.trace--
+
+Direct Mapped Cache
+C = 10, S = 0
+
+--astar.trace--
+
+--bzip2.trace--
+
+--mcf.trace--
+
+--perlbench.trace--
+
+4 Way Associative
+C = 12, S = 2, B = 4
+
+--astar.trace--
+
+--bzip2.trace--
+
+--mcf.trace--
+
+--perlbench.trace--
+
+Fully Associative
+C = 12, S = 8, B = 4
+
+--astar.trace--
+
+--bzip2.trace--
+
+--mcf.trace--
+
+--perlbench.trace--
