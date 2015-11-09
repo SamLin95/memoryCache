@@ -14,9 +14,10 @@
  */
 
 void cache_init(uint64_t C, uint64_t S, uint64_t B) {
-	int i, j, k;
+	int i;
 	cache_line *current_line;
 	cache_block *current_block;
+
 	uint64_t num_lines = 1 << (C - B - S);
 	uint64_t num_blocks_set = 1 << S;
 	uint64_t block_size = 1 << B;
